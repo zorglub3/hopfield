@@ -25,7 +25,7 @@ fn main() {
     let mut states: Vec<Vec<f64>> = Vec::new();
     let mut rng = rand::rng();
 
-    for _i in 0 .. NETWORK_COUNT {
+    for _i in 0..NETWORK_COUNT {
         let mut w = SMatrix::new(STATE_SIZE, 0.);
         initialize_weights(&mut w, &mut rng, INITIAL_NOISE_AMOUNT);
         let mut s = vec![0.; STATE_SIZE];
@@ -53,7 +53,7 @@ fn main() {
         let mut min_error = f64::MAX;
         let mut min_net: Option<usize> = None;
 
-        for i in 0 .. NETWORK_COUNT {
+        for i in 0..NETWORK_COUNT {
             states[i].decay(STATE_DECAY);
             states[i].add_pattern(&current_output, PATTERN_AMOUNT);
             states[i].add_noise(&mut rng, NOISE_AMOUNT);
@@ -71,7 +71,7 @@ fn main() {
         }
 
         if let Some(winner) = min_net {
-            let selected = rng.random_range(0 .. NETWORK_COUNT);
+            let selected = rng.random_range(0..NETWORK_COUNT);
 
             temp_state.copy_from(&states[winner]);
             temp_state.add_noise(&mut rng, LEARNING_NOISE_AMOUNT);
@@ -91,4 +91,3 @@ fn main() {
         }
     }
 }
-

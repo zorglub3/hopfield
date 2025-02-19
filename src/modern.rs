@@ -2,7 +2,7 @@ use crate::dmatrix::DMatrix;
 use crate::state::State;
 
 fn activation(state: &mut [f64]) {
-    for i in 0 .. state.len() {
+    for i in 0..state.len() {
         if state[i] >= 0. {
             state[i] = 1.;
         } else {
@@ -11,11 +11,7 @@ fn activation(state: &mut [f64]) {
     }
 }
 
-pub fn update_state_sync(
-    mat: &DMatrix<f64>,
-    input_state: &[f64],
-    output_state: &mut [f64],
-) {
+pub fn update_state_sync(mat: &DMatrix<f64>, input_state: &[f64], output_state: &mut [f64]) {
     let mut temp_vec = vec![0.; mat.rows()];
 
     mat.mul_vec(input_state, &mut temp_vec);
@@ -62,16 +58,22 @@ mod test {
         learn(&mut m, &p1);
         learn(&mut m, &p2);
 
-        for c in 0 .. 4 { assert_eq!(m[(0, c)], 0.); }
-        for c in 0 .. 4 { assert_eq!(m[(1, c)], 1.); }
-        for c in 0 .. 4 { assert_eq!(m[(2, c)], 2.); }
+        for c in 0..4 {
+            assert_eq!(m[(0, c)], 0.);
+        }
+        for c in 0..4 {
+            assert_eq!(m[(1, c)], 1.);
+        }
+        for c in 0..4 {
+            assert_eq!(m[(2, c)], 2.);
+        }
     }
 
     #[test]
     fn can_recall_pattern() {
         let mut m = DMatrix::new(1, 8, 0.);
         let p: Vec<f64> = vec![1., 1., -1., -1., 1., 1., -1., -1.];
-        let a: Vec<f64> = vec![1., 0., -1.,  0., 0., 1.,  0.,  0.];
+        let a: Vec<f64> = vec![1., 0., -1., 0., 0., 1., 0., 0.];
         let mut output: Vec<f64> = vec![0.; 8];
 
         learn(&mut m, &p);
@@ -79,9 +81,8 @@ mod test {
         update_state_sync(&m, &a, &mut output);
 
         println!("output: {:?}", output);
-        for i in 0 .. 8 {
+        for i in 0..8 {
             assert_eq!(output[i], p[i]);
         }
     }
 }
-

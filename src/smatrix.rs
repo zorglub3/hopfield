@@ -144,7 +144,7 @@ mod test {
         let mat: SMatrix<i32> = SMatrix::from_fn0(8, &mut || 0);
         let v: Vec<i32> = vec![0; 8];
 
-        for r in 0 .. 8 {
+        for r in 0..8 {
             assert_eq!(mat.row_mul(r, &v, 0), 0);
         }
     }
@@ -154,10 +154,10 @@ mod test {
         use rand::Rng;
 
         let mut rng = rand::rng();
-        let mat: SMatrix<f64> = SMatrix::from_fn0(8, &mut || rng.random_range(-1. .. 1.));
-        
-        for r in 0 .. 8 {
-            for c in 0 .. 8 {
+        let mat: SMatrix<f64> = SMatrix::from_fn0(8, &mut || rng.random_range(-1. ..1.));
+
+        for r in 0..8 {
+            for c in 0..8 {
                 assert_eq!(mat[(r, c)], mat[(c, r)]);
             }
         }
@@ -168,7 +168,7 @@ mod test {
         let mat: SMatrix<i32> = SMatrix::from_fn2(8, &mut |r, c| (r + c) as i32);
         let v: Vec<i32> = vec![0, 1, 2, 3, 4, 5, 6, 7];
 
-        for i in 0 .. 8 {
+        for i in 0..8 {
             let expect = 140 + (i as i32) * 28;
             assert_eq!(mat.row_mul(i, &v, 0), expect);
         }
@@ -181,8 +181,8 @@ mod test {
 
         m1.add_matrix(&m2);
 
-        for r in 0 .. 8 {
-            for c in 0 .. 8 {
+        for r in 0..8 {
+            for c in 0..8 {
                 assert_eq!(m1[(r, c)], (r + c) as i32);
             }
         }
@@ -195,8 +195,8 @@ mod test {
 
         m1.add_matrix(&m2);
 
-        for r in 0 .. 8 {
-            for c in 0 .. 8 {
+        for r in 0..8 {
+            for c in 0..8 {
                 let expected = (r as i32) * 3 + (c as i32) * 3;
                 assert_eq!(m1[(r, c)], expected);
             }

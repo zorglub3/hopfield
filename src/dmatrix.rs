@@ -9,8 +9,8 @@ pub struct DMatrix<T> {
 
 impl<T: Debug> DMatrix<T> {
     pub fn pp(&self) {
-        for r in 0 .. self.rows {
-            for c in 0 .. self.cols {
+        for r in 0..self.rows {
+            for c in 0..self.cols {
                 print!("{:?} ", self[(r, c)]);
             }
             println!("");
@@ -57,7 +57,7 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         let mut i1 = r * self.cols;
         let mut i2 = c;
 
-        for _i in 0 .. self.cols {
+        for _i in 0..self.cols {
             acc += self.data[i1] * m.data[i2];
             i1 += 1;
             i2 += m.cols;
@@ -74,7 +74,7 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
 
         let mut i1 = r * self.cols;
 
-        for i2 in 0 .. v.len() {
+        for i2 in 0..v.len() {
             acc += self.data[i1] * v[i2];
             i1 += 1;
         }
@@ -89,7 +89,7 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         let mut acc = T::default();
         let mut i1 = c;
 
-        for i2 in 0 .. v.len() {
+        for i2 in 0..v.len() {
             acc += self.data[i1] * v[i2];
             i1 += self.cols;
         }
@@ -102,8 +102,8 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.cols, m2.cols);
         debug_assert_eq!(m1.cols, m2.rows);
 
-        for r in 0 .. self.rows {
-            for c in 0 .. self.cols {
+        for r in 0..self.rows {
+            for c in 0..self.cols {
                 self[(r, c)] = m1.mul_row_col(m2, r, c);
             }
         }
@@ -113,7 +113,7 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.cols, input.len());
         debug_assert_eq!(self.rows, output.len());
 
-        for i in 0 .. output.len() {
+        for i in 0..output.len() {
             output[i] = self.mul_row_vec(input, i);
         }
     }
@@ -122,7 +122,7 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.rows, input.len());
         debug_assert_eq!(self.cols, output.len());
 
-        for i in 0 .. output.len() {
+        for i in 0..output.len() {
             output[i] = self.mul_col_vec(input, i);
         }
     }
@@ -133,7 +133,7 @@ impl<T: AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.rows, mat.rows);
         debug_assert_eq!(self.cols, mat.cols);
 
-        for i in 0 .. self.data.len() {
+        for i in 0..self.data.len() {
             self.data[i] += mat.data[i];
         }
     }
@@ -144,7 +144,7 @@ impl<T: Clone> DMatrix<T> {
         debug_assert_eq!(self.rows, m.rows);
         debug_assert_eq!(self.cols, m.cols);
 
-        for i in 0 .. self.data.len() {
+        for i in 0..self.data.len() {
             self.data[i] = m.data[i].clone();
         }
     }

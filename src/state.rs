@@ -1,7 +1,7 @@
 use rand::Rng;
 use std::ops::Deref;
 use std::ops::DerefMut;
-use std::ops::{Shr, BitAnd};
+use std::ops::{BitAnd, Shr};
 
 pub trait State {
     fn error_norm(&self, pattern: &[f64]) -> f64;
@@ -9,8 +9,17 @@ pub trait State {
     fn decay(&mut self, d: f64);
     fn add_pattern(&mut self, pattern: &[f64], amount: f64);
     fn add_noise(&mut self, rng: &mut impl Rng, amount: f64);
-    fn from_bits<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, bits: S);
-    fn from_bits_with_mask<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, bits: S, mask: S);
+    fn from_bits<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(
+        &mut self,
+        count: usize,
+        bits: S,
+    );
+    fn from_bits_with_mask<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(
+        &mut self,
+        count: usize,
+        bits: S,
+        mask: S,
+    );
     fn softmax(&mut self);
 }
 
@@ -19,7 +28,7 @@ impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
         let mut acc = 0.;
         let mut pat_acc = 0.;
 
-        for i in 0 .. self.len().min(pattern.len()) {
+        for i in 0..self.len().min(pattern.len()) {
             acc += self[i] * pattern[i];
             pat_acc += pattern[i].abs();
         }
@@ -32,31 +41,35 @@ impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
     }
 
     fn copy_from(&mut self, pattern: &[f64]) {
-        for i in 0 .. self.len().min(pattern.len()) {
+        for i in 0..self.len().min(pattern.len()) {
             self[i] = pattern[i];
         }
     }
 
     fn decay(&mut self, d: f64) {
-        for i in 0 .. self.len() {
+        for i in 0..self.len() {
             self[i] *= d;
         }
     }
 
     fn add_pattern(&mut self, pattern: &[f64], amount: f64) {
-        for i in 0 .. self.len().min(pattern.len()) {
+        for i in 0..self.len().min(pattern.len()) {
             self[i] += pattern[i] * amount;
         }
     }
 
     fn add_noise(&mut self, rng: &mut impl Rng, amount: f64) {
-        for i in 0 .. self.len() {
-            self[i] += rng.random_range(-amount .. amount);
+        for i in 0..self.len() {
+            self[i] += rng.random_range(-amount..amount);
         }
     }
 
-    fn from_bits<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, mut bits: S) {
-        for i in 0 .. count.min(self.len()) {
+    fn from_bits<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(
+        &mut self,
+        count: usize,
+        mut bits: S,
+    ) {
+        for i in 0..count.min(self.len()) {
             if bits & 1.into() == 1.into() {
                 self[i] = 1.;
             } else {
@@ -67,8 +80,15 @@ impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
         }
     }
 
-    fn from_bits_with_mask<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, mut bits: S, mut mask: S) {
-        for i in 0 .. count.min(self.len()) {
+    fn from_bits_with_mask<
+        S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy,
+    >(
+        &mut self,
+        count: usize,
+        mut bits: S,
+        mut mask: S,
+    ) {
+        for i in 0..count.min(self.len()) {
             if mask & 1.into() == 1.into() {
                 if bits & 1.into() == 1.into() {
                     self[i] = 1.;
@@ -88,14 +108,14 @@ impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
         if self.len() > 0 {
             let mut acc = 0.;
 
-            for i in 0 .. self.len() {
+            for i in 0..self.len() {
                 let v = self[i].exp();
                 acc += v;
                 self[i] = v;
             }
 
             if acc > f64::EPSILON {
-                for i in 0 .. self.len() {
+                for i in 0..self.len() {
                     self[i] /= acc;
                 }
             }
@@ -119,7 +139,7 @@ mod test {
         assert_eq!(u[2], -1.);
         assert_eq!(u[3], -1.);
     }
-    
+
     #[test]
     fn from_bits_with_mask_works() {
         let v: u32 = 0b1101;
@@ -140,7 +160,7 @@ mod test {
 
         v.decay(0.5);
 
-        for i in 0 .. 8 {
+        for i in 0..8 {
             assert!(v[i] < 10.0);
         }
     }
@@ -152,7 +172,7 @@ mod test {
 
         v.add_pattern(&p, 0.5);
 
-        for i in 0 .. 8 {
+        for i in 0..8 {
             assert_eq!(v[i], 1.0 + ((i as f64) + 1.0) * 0.5);
         }
     }
@@ -164,7 +184,7 @@ mod test {
 
         v.add_noise(&mut rng, 1.0);
 
-        for i in 0 .. 8 {
+        for i in 0..8 {
             assert!(v[i] <= 2.0);
             assert!(v[i] >= 0.0);
         }

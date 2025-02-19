@@ -15,7 +15,7 @@ pub fn initialize_weights<R: Rng>(weights: &mut SMatrix<f64>, rng: &mut R, amoun
             if c == r {
                 weights[(r, c)] = 0.;
             } else {
-                weights[(r, c)] = rng.random_range(-amount .. amount);
+                weights[(r, c)] = rng.random_range(-amount..amount);
             }
         }
     }
@@ -37,12 +37,7 @@ pub fn update_state_sync(
     }
 }
 
-pub fn update_state_async(
-    weights: &SMatrix<f64>, 
-    bias: &[f64], 
-    state: &mut [f64], 
-    index: usize,
-) {
+pub fn update_state_async(weights: &SMatrix<f64>, bias: &[f64], state: &mut [f64], index: usize) {
     debug_assert!(index < state.len());
     debug_assert!(index < weights.rows());
 
@@ -68,8 +63,8 @@ pub fn energy(weights: &SMatrix<f64>, bias: &[f64], state: &[f64]) -> f64 {
 pub fn hebb_learn(weights: &mut SMatrix<f64>, pattern: &[f64]) {
     let n_inv = 1. / (pattern.len() as f64);
 
-    for r in 0 .. weights.rows() {
-        for c in (r + 1) .. weights.cols() {
+    for r in 0..weights.rows() {
+        for c in (r + 1)..weights.cols() {
             weights[(r, c)] += n_inv * pattern[r] * pattern[c];
         }
     }
@@ -78,12 +73,12 @@ pub fn hebb_learn(weights: &mut SMatrix<f64>, pattern: &[f64]) {
 pub fn storkey_learn(weights: &mut SMatrix<f64>, pattern: &[f64], amount: f64) {
     let mut h = Vec::with_capacity(pattern.len());
 
-    for i in 0 .. pattern.len() {
+    for i in 0..pattern.len() {
         h.push(weights.row_mul(i, pattern, 0.));
     }
 
-    for r in 0 .. weights.rows() {
-        for c in (r + 1) .. weights.cols() {
+    for r in 0..weights.rows() {
+        for c in (r + 1)..weights.cols() {
             weights[(r, c)] +=
                 amount * (pattern[r] * pattern[c] - pattern[r] * h[c] - h[r] * pattern[c]);
         }
