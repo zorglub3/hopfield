@@ -11,7 +11,7 @@ pub trait State {
     fn add_noise(&mut self, rng: &mut impl Rng, amount: f64);
     fn from_bits<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, bits: S);
     fn from_bits_with_mask<S: BitAnd<Output = S> + Shr<Output = S> + From<u8> + PartialEq + Copy>(&mut self, count: usize, bits: S, mask: S);
-    fn softmax(&mut self, pattern: &[f64]);
+    fn softmax(&mut self);
 }
 
 impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
@@ -84,20 +84,18 @@ impl<T: Deref<Target = [f64]> + DerefMut<Target = [f64]>> State for T {
         }
     }
 
-    fn softmax(&mut self, pattern: &[f64]) {
-        debug_assert_eq!(self.len(), pattern.len());
-
-        if pattern.len() > 0 {
+    fn softmax(&mut self) {
+        if self.len() > 0 {
             let mut acc = 0.;
 
-            for i in 0 .. pattern.len() {
-                let v = pattern[i].exp();
+            for i in 0 .. self.len() {
+                let v = self[i].exp();
                 acc += v;
                 self[i] = v;
             }
 
             if acc > f64::EPSILON {
-                for i in 0 .. pattern.len() {
+                for i in 0 .. self.len() {
                     self[i] /= acc;
                 }
             }

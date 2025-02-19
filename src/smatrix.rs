@@ -163,14 +163,14 @@ mod test {
         }
     }
 
-    #[ignore]
     #[test]
     fn row_mul_nonzero() {
         let mat: SMatrix<i32> = SMatrix::from_fn2(8, &mut |r, c| (r + c) as i32);
         let v: Vec<i32> = vec![0, 1, 2, 3, 4, 5, 6, 7];
 
-        for r in 0 .. 8 {
-            assert_eq!(mat.row_mul(r, &v, 0), todo!());
+        for i in 0 .. 8 {
+            let expect = 140 + (i as i32) * 28;
+            assert_eq!(mat.row_mul(i, &v, 0), expect);
         }
     }
 

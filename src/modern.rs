@@ -16,12 +16,11 @@ pub fn update_state_sync(
     input_state: &[f64],
     output_state: &mut [f64],
 ) {
-    let mut temp_vec1 = vec![0.; mat.rows()];
-    let mut temp_vec2 = vec![0.; mat.rows()];
+    let mut temp_vec = vec![0.; mat.rows()];
 
-    mat.mul_vec(input_state, &mut temp_vec1);
-    temp_vec2.softmax(&temp_vec1);
-    mat.trans_mul_vec(&temp_vec2, output_state);
+    mat.mul_vec(input_state, &mut temp_vec);
+    temp_vec.softmax();
+    mat.trans_mul_vec(&temp_vec, output_state);
     activation(output_state);
 }
 
