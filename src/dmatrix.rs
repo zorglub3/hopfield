@@ -8,6 +8,7 @@ pub struct DMatrix<T> {
 }
 
 impl<T: Debug> DMatrix<T> {
+    #[allow(dead_code)]
     pub fn pp(&self) {
         for r in 0..self.rows {
             for c in 0..self.cols {
