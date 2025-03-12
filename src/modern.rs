@@ -1,3 +1,6 @@
+//! Modern Hopfield Network. There is such a thing. Unlike classic Hopfield 
+//! networks, the modern counterpart allows for one shot learning and recall.
+
 use crate::dmatrix::DMatrix;
 use crate::state::State;
 

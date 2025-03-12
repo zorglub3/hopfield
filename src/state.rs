@@ -1,3 +1,6 @@
+//! Some utility methods that are useful for manipulating the state of various Hopfield
+//! models. The state is represented with a slice.
+
 use rand::Rng;
 use std::ops::Deref;
 use std::ops::DerefMut;

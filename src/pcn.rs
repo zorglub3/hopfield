@@ -1,3 +1,7 @@
+//! Predictive Coding based associative memory. The memory unit is encapsulated
+//! in a `struct`. The methods allow for both inference and learning and the 
+//! operations that inference consists of.
+
 use crate::dmatrix::DMatrix;
 use crate::state::State;
 

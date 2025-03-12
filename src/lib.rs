@@ -1,3 +1,5 @@
+//! A library for computing with various associative memory models.
+
 pub mod classic;
 pub mod dmatrix;
 pub mod modern;

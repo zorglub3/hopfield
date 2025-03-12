@@ -1,3 +1,7 @@
+//! Classic Hopfield network functions. The network is represented as 
+//! a symmetric matrix for the weights and a state: an `f64` slice. The
+//! functions in the module allow for doing both learning and recall.
+
 use crate::smatrix::SMatrix;
 use rand::Rng;
 

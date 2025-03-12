@@ -1,3 +1,7 @@
+//! Symmetric matrix representation. Used for matrices that are symmetric along the
+//! diagonal. This is needed for classic Hopfield networks that have un-directed 
+//! edges.
+
 use std::fmt::Debug;
 use std::ops::{AddAssign, Index, IndexMut, Mul};
 

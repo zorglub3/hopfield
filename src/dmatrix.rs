@@ -1,3 +1,7 @@
+//! Dense matrix structure and methods. The matrix is stored row-wise in
+//! memory. Single column matrices (aka column-vectors) can be represented
+//! using slices. This makes matrix-vector multiplication (a little) faster.
+
 use std::fmt::Debug;
 use std::ops::{AddAssign, Index, IndexMut, Mul};
 
