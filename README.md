@@ -39,3 +39,4 @@ More examples to follow.
 - "Palimpsest memories: a new high-capacity forgetful learning rule for Hopﬁeld
   networks", A. Storkey, 2000
 - "Associative Memories via Predictive Coding", T. Salvatori et al, 2021
+- "On the Convergence Properties of the Hopfield Model", J. Bruck, 1990
