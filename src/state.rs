@@ -2,6 +2,7 @@
 //! models. The state is represented with a slice.
 
 use rand::Rng;
+use rand::RngExt;
 use std::ops::Deref;
 use std::ops::DerefMut;
 use std::ops::{BitAnd, Shr};

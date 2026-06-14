@@ -4,6 +4,7 @@
 
 use crate::smatrix::SMatrix;
 use rand::Rng;
+use rand::RngExt;
 
 fn activation(v: f64, bias: f64) -> f64 {
     if v >= bias {
@@ -25,7 +26,28 @@ pub fn initialize_weights<R: Rng>(weights: &mut SMatrix<f64>, rng: &mut R, amoun
     }
 }
 
+pub fn initialize_bias<R: Rng>(bias: &mut [f64], rng: &mut R, amount: f64) {
+    for i in 0..bias.len() {
+        bias[i] = rng.random_range(-amount..amount);
+    }
+}
+
 pub fn update_state_sync(
+    weights: &SMatrix<f64>,
+    input_state: &[f64],
+    output_state: &mut [f64],
+) {
+    let l = weights
+        .rows()
+        .min(input_state.len())
+        .min(output_state.len());
+
+    for i in 0..l {
+        output_state[i] = activation(weights.row_mul(i, input_state, 0.), 0.);
+    }
+}
+
+pub fn update_state_sync_with_bias(
     weights: &SMatrix<f64>,
     bias: &[f64],
     input_state: &[f64],
@@ -41,7 +63,16 @@ pub fn update_state_sync(
     }
 }
 
-pub fn update_state_async(weights: &SMatrix<f64>, bias: &[f64], state: &mut [f64], index: usize) {
+pub fn update_state_async(weights: &SMatrix<f64>, state: &mut [f64], index: usize) {
+    debug_assert!(index < state.len());
+    debug_assert!(index < weights.rows());
+
+    let new_state_value = activation(weights.row_mul(index, state, 0.), 0.);
+
+    state[index] = new_state_value;
+}
+
+pub fn update_state_async_with_bias(weights: &SMatrix<f64>, bias: &[f64], state: &mut [f64], index: usize) {
     debug_assert!(index < state.len());
     debug_assert!(index < weights.rows());
 
@@ -50,7 +81,19 @@ pub fn update_state_async(weights: &SMatrix<f64>, bias: &[f64], state: &mut [f64
     state[index] = new_state_value;
 }
 
-pub fn energy(weights: &SMatrix<f64>, bias: &[f64], state: &[f64]) -> f64 {
+pub fn energy(weights: &SMatrix<f64>, state: &[f64]) -> f64 {
+    let mut acc = 0.;
+
+    for r in 0..state.len() {
+        for c in 0..state.len() {
+            acc -= weights[(r, c)] * state[r] * state[c];
+        }
+    }
+
+    acc
+}
+
+pub fn energy_with_bias(weights: &SMatrix<f64>, bias: &[f64], state: &[f64]) -> f64 {
     let mut acc = 0.;
 
     for r in 0..state.len() {
@@ -88,3 +131,8 @@ pub fn storkey_learn(weights: &mut SMatrix<f64>, pattern: &[f64], amount: f64) {
         }
     }
 }
+
+pub fn storkey_learn_bias(_bias: &mut [f64], _pattern: &[f64], _amount: f64) {
+    todo!()
+}
+

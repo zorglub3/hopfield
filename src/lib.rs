@@ -6,3 +6,6 @@ pub mod modern;
 pub mod pcn;
 pub mod smatrix;
 pub mod state;
+pub mod neural_group;
+pub mod repertoire;
+pub mod pattern_map;
