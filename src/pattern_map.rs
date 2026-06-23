@@ -1,5 +1,5 @@
-use rand::Rng;
 use rand::seq::IteratorRandom;
+use rand::Rng;
 
 pub struct PatternMap {
     mapping: Vec<usize>,

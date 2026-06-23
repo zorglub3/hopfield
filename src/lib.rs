@@ -1,11 +1,8 @@
 //! A library for computing with various associative memory models.
 
-pub mod classic;
+pub mod assoc_mem;
 pub mod dmatrix;
-pub mod modern;
-pub mod pcn;
+pub mod pattern_map;
+pub mod repertoire;
 pub mod smatrix;
 pub mod state;
-pub mod neural_group;
-pub mod repertoire;
-pub mod pattern_map;

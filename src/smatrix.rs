@@ -1,5 +1,5 @@
 //! Symmetric matrix representation. Used for matrices that are symmetric along the
-//! diagonal. This is needed for classic Hopfield networks that have un-directed 
+//! diagonal. This is needed for classic Hopfield networks that have un-directed
 //! edges.
 
 use std::fmt::Debug;
@@ -16,17 +16,17 @@ impl<T: Debug> SMatrix<T> {
             for c in 0..self.rows {
                 print!("{:?} ", self[(r, c)]);
             }
-            println!("");
+            println!();
         }
     }
 }
 
 impl<T> SMatrix<T> {
-    pub fn rows(&self) -> usize {
+    pub fn rows_count(&self) -> usize {
         self.rows
     }
 
-    pub fn cols(&self) -> usize {
+    pub fn cols_count(&self) -> usize {
         self.rows
     }
 }
@@ -127,6 +127,7 @@ impl<T> IndexMut<(usize, usize)> for SMatrix<T> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use rand::RngExt;
 
     #[test]
     fn get_the_right_row() {
@@ -155,8 +156,6 @@ mod test {
 
     #[test]
     fn random_matrix_is_symmetric() {
-        use rand::Rng;
-
         let mut rng = rand::rng();
         let mat: SMatrix<f64> = SMatrix::from_fn0(8, &mut || rng.random_range(-1. ..1.));
 

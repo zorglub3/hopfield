@@ -18,7 +18,7 @@ impl<T: Debug> DMatrix<T> {
             for c in 0..self.cols {
                 print!("{:?} ", self[(r, c)]);
             }
-            println!("");
+            println!();
         }
     }
 }
@@ -79,8 +79,8 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
 
         let mut i1 = r * self.cols;
 
-        for i2 in 0..v.len() {
-            acc += self.data[i1] * v[i2];
+        for x in v {
+            acc += self.data[i1] * *x;
             i1 += 1;
         }
 
@@ -94,8 +94,8 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         let mut acc = T::default();
         let mut i1 = c;
 
-        for i2 in 0..v.len() {
-            acc += self.data[i1] * v[i2];
+        for x in v {
+            acc += self.data[i1] * *x;
             i1 += self.cols;
         }
 
@@ -118,8 +118,8 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.cols, input.len());
         debug_assert_eq!(self.rows, output.len());
 
-        for i in 0..output.len() {
-            output[i] = self.mul_row_vec(input, i);
+        for (i, o) in output.iter_mut().enumerate() {
+            *o = self.mul_row_vec(input, i);
         }
     }
 
@@ -127,8 +127,8 @@ impl<T: Mul<Output = T> + Default + AddAssign + Copy> DMatrix<T> {
         debug_assert_eq!(self.rows, input.len());
         debug_assert_eq!(self.cols, output.len());
 
-        for i in 0..output.len() {
-            output[i] = self.mul_col_vec(input, i);
+        for (i, o) in output.iter_mut().enumerate() {
+            *o = self.mul_col_vec(input, i);
         }
     }
 }
