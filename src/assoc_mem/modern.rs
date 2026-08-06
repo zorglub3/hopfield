@@ -34,11 +34,11 @@ impl<const N: usize> AssociativeMemory for ModernHopfieldNetwork<N> {
         self.state.len()
     }
 
-    fn state(&self) -> &[f64] {
+    fn input_state(&self) -> &[f64] {
         &self.state
     }
 
-    fn state_mut(&mut self) -> &mut [f64] {
+    fn input_state_mut(&mut self) -> &mut [f64] {
         &mut self.state
     }
 
@@ -87,6 +87,14 @@ impl<const N: usize> AssociativeMemory for ModernHopfieldNetwork<N> {
         if let Some(index) = pattern_select {
             self.state.copy_from_slice(&self.patterns[index]);
         }
+    }
+
+    fn update_async_prob<R: Rng>(&mut self, _index: usize, _beta: f64, _rng: &mut R) {
+        unimplemented!();
+    }
+
+    fn update_sync_prob<R: Rng>(&mut self, _beta: f64, _rng: &mut R) {
+        unimplemented!();
     }
 
     fn randomize<R: Rng>(&mut self, _rng: &mut R) {

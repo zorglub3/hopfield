@@ -81,11 +81,11 @@ impl<L: LearningRule> AssociativeMemory for ClassicHopfieldNetwork<L> {
         self.state.len()
     }
 
-    fn state(&self) -> &[f64] {
+    fn input_state(&self) -> &[f64] {
         &self.state
     }
 
-    fn state_mut(&mut self) -> &mut [f64] {
+    fn input_state_mut(&mut self) -> &mut [f64] {
         &mut self.state
     }
 
@@ -118,6 +118,27 @@ impl<L: LearningRule> AssociativeMemory for ClassicHopfieldNetwork<L> {
         }
 
         self.state.copy_from_slice(&new_state);
+    }
+
+    fn update_async_prob<R: Rng>(&mut self, index: usize, beta: f64, rng: &mut R) {
+        let h = self.weights.row_mul(index, &self.state, 0.);
+        let p = 0.5 * (1. + (beta * h).tanh());
+
+        self.state[index] = if rng.random_bool(p) {
+            1.
+        } else {
+            -1.
+        };
+    }
+
+    fn update_sync_prob<R: Rng>(&mut self, beta: f64, rng: &mut R) {
+        let mut new_state = vec![0.; self.state_size()];
+
+        for (i, s) in new_state.iter_mut().enumerate() {
+            let h = self.weights.row_mul(i, &self.state, 0.);
+            let p = 0.5 * (1. + (beta * h).tanh());
+            *s = if rng.random_bool(p) { 1. } else { -1. };
+        }
     }
 
     fn randomize<R: Rng>(&mut self, rng: &mut R) {

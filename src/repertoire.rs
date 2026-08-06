@@ -24,7 +24,7 @@ impl<G: AssociativeMemory> NeuralGroup<G> {
     }
 
     fn set_input(&mut self, input_pattern: &[f64]) {
-        self.mapping.map_to(input_pattern, self.memory.state_mut());
+        self.mapping.map_to(input_pattern, self.memory.input_state_mut());
     }
 
     fn update_async_random<R: Rng>(&mut self, rng: &mut R) {
@@ -59,6 +59,26 @@ impl<G: AssociativeMemory> Repertoire<G> {
             input_size,
             group_weights: SMatrix::new(group_count, 0.),
         }
+    }
+
+    pub fn group_count(&self) -> usize {
+        self.neural_groups.len()
+    }
+
+    pub fn neural_group(&self, index: usize) -> &G {
+        &self.neural_groups[index].memory
+    }
+
+    pub fn neural_group_mut(&mut self, index: usize) -> &mut G {
+        &mut self.neural_groups[index].memory
+    }
+
+    pub fn mapping(&self, index: usize) -> &PatternMap {
+        &self.neural_groups[index].mapping
+    }
+
+    pub fn mapping_mut(&mut self, index: usize) -> &mut PatternMap {
+        &mut self.neural_groups[index].mapping
     }
 
     pub fn randomize<R: Rng>(&mut self, rng: &mut R) {
